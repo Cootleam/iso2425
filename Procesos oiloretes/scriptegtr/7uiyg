@@ -1,0 +1,71 @@
+#!/bin/bash
+
+# 1. Nombre y apellidos del autor
+echo "Autor: Tu Nombre"
+
+# 2. Control de parámetros
+if [ "$#" -ne 2 ]; then
+    echo "Se requieren exactamente dos parámetros: <fichero_salida> <max_operaciones>"
+    exit 1
+fi
+
+fichero_salida="$1"
+max_operaciones="$2"
+
+# Verificar si el fichero existe
+if [ -e "$fichero_salida" ]; then
+    echo "El fichero '$fichero_salida' ya existe. El programa se cerrará."
+    exit 1
+fi
+
+# Inicializar el contador de operaciones
+contador=0
+
+# 3. Bucle para las operaciones
+while [ $contador -lt $max_operaciones ]; do
+    echo "Operación Op1 Op2:"
+    read -r operacion op1 op2
+
+    # Verificar si la operación es 'X' para salir
+    if [ "$operacion" == "X" ]; then
+        break
+    fi
+
+    # Verificar si la operación es válida
+    case $operacion in
+        S)
+            resultado=$((op1 + op2))
+        ;;
+        R)
+            resultado=$((op1 - op2))
+        ;;
+        M)
+            resultado=$((op1 * op2))
+        ;;
+        D)
+            if [ "$op2" -eq 0 ]; then
+                echo "Error: División por cero."
+                continue
+            fi
+            resultado=$((op1 / op2))
+        ;;
+        *)
+            echo "Operación no válida. Usa S, R, M, D o X para salir."
+            continue
+        ;;
+    esac
+
+    # Escribir en el fichero
+    echo "$operacion $op1 $op2" >> "$fichero_salida"
+    
+    # Mostrar el resultado
+    echo "Resultado: $resultado"
+
+    # Incrementar el contador
+    contador=$((contador + 1))
+done
+
+# 5. Mostrar la ruta completa del fichero y su contenido
+echo "Ruta del fichero de salida: $(realpath "$fichero_salida")"
+echo "Contenido del fichero:"
+cat "$fichero_salida"
