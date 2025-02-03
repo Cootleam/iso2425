@@ -1,1 +1,55 @@
+#!/bin/bash
+
+ARCHIVO="agenda.txt"
+
+# Función para añadir una entrada
+function añadir_entrada {
+    read -p "Introduce el DNI: " dni
+    if grep -q "^$dni:" "$ARCHIVO"; then
+        echo "El DNI ya está dado de alta en la agenda."
+    else
+        read -p "Introduce el nombre: " nombre
+        read -p "Introduce los apellidos: " apellidos
+        read -p "Introduce la localidad: " localidad
+        echo "$dni:$nombre:$apellidos:$localidad" >> "$ARCHIVO"
+        echo "Entrada añadida correctamente."
+    fi
+}
+
+# Función para buscar por DNI
+function buscar_por_dni {
+    read -p "Introduce el DNI: " dni
+    entrada=$(grep "^$dni:" "$ARCHIVO")
+    if [ -n "$entrada" ]; then
+        IFS=':' read -r dni nombre apellidos localidad <<< "$entrada"
+        echo "La persona con DNI número $dni es: $nombre $apellidos, y vive en $localidad."
+    else
+        echo "DNI no encontrado en la agenda."
+    fi
+}
+
+# Función para ver la agenda completa
+function ver_agenda {
+    if [ -s "$ARCHIVO" ]; then
+        cat "$ARCHIVO"
+    else
+        echo "Agenda vacía."
+    fi
+}
+
+# Función para eliminar todas las entradas
+function eliminar_todas_las_entradas {
+    > "$ARCHIVO"
+    echo "Todas las entradas han sido eliminadas."
+}
+
+# Menú principal
+while true; do
+    echo "Seleccione una opción:"
+    echo "a) Añadir una entrada"
+    echo "b) Buscar por DNI"
+    echo "c) Ver la agenda completa"
+    echo "d) Eliminar todas las entradas de la agenda"
+    echo "e) Finalizar"
+    read -p "
 
