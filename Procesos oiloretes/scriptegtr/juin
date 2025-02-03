@@ -51,5 +51,15 @@ while true; do
     echo "c) Ver la agenda completa"
     echo "d) Eliminar todas las entradas de la agenda"
     echo "e) Finalizar"
-    read -p "
+    read -p "Opción: " opcion
 
+    case $opcion in
+        a) añadir_entrada ;;
+        b) buscar_por_dni ;;
+        c) ver_agenda ;;
+        d) eliminar_todas_las_entradas ;;
+        e) echo "Saliendo del programa."; exit 0 ;;
+        *) echo "Opción no válida. Por favor, inténtelo de nuevo." ;;
+    esac
+    echo ""
+done
