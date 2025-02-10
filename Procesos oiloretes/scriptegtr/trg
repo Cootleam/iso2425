@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# 1. Control del número de parámetros de entrada
+if [ "$#" -ne 2 ]; then
+    echo "Error: Se requieren exactamente dos parámetros."
+    exit 1
+fi
+
+# Asignar parámetros a variables
+output_file="$1"
+directory="$2"
+
+# 2. Comprobar si el fichero de salida existe
+if [ -e "$output_file" ]; then
+    echo "Error: El fichero de salida '$output_file' ya existe."
+    exit 1
+fi
+
+# 3. Comprobar si el directorio existe
+if [ ! -d "$directory" ]; then
+    echo "Error: El directorio '$directory' no existe."
+    exit 1
+fi
+
+# 4. Comprobar si el directorio está vacío
+if [ -z "$(ls -A "$directory")" ]; then
+    echo "Error: El directorio '$directory' está vacío."
+    exit 1
+fi
+
+# 5. Escribir el nombre y apellidos del autor
+echo "Autor: Tu Nombre Apellido"
+
+# 6. Inicializar el contador de ficheros
+count=0
+
+# 7. Identificar los ficheros .txt con 5 o más líneas
+for file in "$directory"/*.txt; do
+    if [ -f "$file" ]; then
+        line_count=$(wc -l < "$file")
+        if [ "$line_count" -ge 5 ]; then
+            # a. Mostrar el nombre del fichero
+            echo "$file"
+            # b. Escribir el nombre en el fichero de salida
+            echo "$file" >> "$output_file"
+            count=$((count + 1))
+            
+            # 8. Crear el nuevo fichero .q
+            word_count=$(wc -w < "$file")
+            new_file="$file.q"
+            echo "El fichero original tiene $word_count palabras" > "$new_file"
+            cat "$file" >> "$new_file"
+        fi
+    fi
+done
+
+# 9. Escribir el número de ficheros identificados
+echo "Número de ficheros identificados: $count" >> "$output_file"
