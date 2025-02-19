@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ $1 = "crear" ]; then
+
+nano -c "Algo.bak"
+
+fi
+
+if [ $1 = "borrar" ];
+then
+
+rm -c "Algo.bak"
+nano -c "Algo.bak" >> echo "se ha vovo"
+fi
+
+if [$# -lt 1 ]; then
+echo "lin lin no exitwe brrrr"
+exit
+fi
